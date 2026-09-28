@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>FORGE-X · DVR/NVR Forensic Intelligence</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{color-scheme:dark;--bg:#0b0d10;--pn:#12161b;--ln:#232a33;--tx:#e6e9ee;--mu:#8b95a3;--ac:#3fd0d4;--ok:#4cc38a;--wn:#e3b341;--er:#e5534b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 18% 20%,#12353a22,transparent 28%),radial-gradient(circle at 82% 72%,#1730481f,transparent 30%),var(--bg);color:var(--tx);font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background-image:radial-gradient(circle at 18% 20%,#12353a22,transparent 28%),radial-gradient(circle at 82% 72%,#1730481f,transparent 30%),linear-gradient(#ffffff04 1px,transparent 1px),linear-gradient(90deg,#ffffff04 1px,transparent 1px);background-size:auto,auto,40px 40px,40px 40px}
+.mono,code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.btn{background:#ffffff07;border:1px solid var(--ln);padding:10px 15px;border-radius:9px;transition:.15s;box-shadow:0 8px 24px #0003}.btn:hover{border-color:var(--ac)}
+.btn.p{background:linear-gradient(135deg,var(--ac),#28bbc9);color:#04191a;border-color:var(--ac);font-weight:650;letter-spacing:.03em;box-shadow:0 10px 28px #35d6dc26}.btn.p:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:default}
+input{background:#0008;border:1px solid var(--ln);color:var(--tx);padding:9px 12px;border-radius:6px;width:100%}
+#app{display:flex;height:100%}
+aside{width:238px;background:linear-gradient(180deg,#090c10f2,#07090cf2);backdrop-filter:blur(18px);flex:none;background:#0a0c0fee;border-right:1px solid var(--ln);display:flex;flex-direction:column;padding:16px 10px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.14em;padding:0 8px 18px}
+nav button{display:flex;width:100%;text-align:left;background:none;border:0;padding:8px 10px;border-radius:6px;color:var(--mu);gap:10px;transition:.15s}
+nav button:hover{color:var(--tx);background:#ffffff08}nav button.on{color:var(--ac);background:#3fd0d412;box-shadow:inset 2px 0 var(--ac)}
+.me{margin-top:auto;border-top:1px solid var(--ln);padding:12px 8px;font-size:12px;color:var(--mu)}.me b{color:var(--tx);display:block;font-size:13px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin-right:6px;box-shadow:0 0 0 3px #4cc38a22}
+main{flex:1;min-width:0;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:14px;padding:10px 26px;height:64px;border-bottom:1px solid var(--ln);background:#080b0fcc;backdrop-filter:blur(14px)}
+header .crumb{color:var(--mu);font-size:12px;white-space:nowrap}header input{max-width:320px;margin-left:auto}
+#page{padding:24px;overflow:auto;flex:1}
+h1{font-size:25px;margin:0 0 2px;font-weight:650;letter-spacing:-.02em}.sub{color:var(--mu);margin-bottom:20px}
+h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin:0 0 12px;font-weight:600}
+.card{background:linear-gradient(145deg,#121820,#0d1218);border:1px solid #25303b;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 14px 36px #0007;transition:.2s}
+.g{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+.kpi:hover{border-color:#3fd0d455;transform:translateY(-1px)}.kpi .v{font-size:26px;font-weight:600}.kpi .l{color:var(--mu);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.bd{display:inline-block;font-size:10px;letter-spacing:.08em;padding:2px 8px;border-radius:99px;border:1px solid var(--ln);color:var(--mu);font-family:ui-monospace,monospace}
+.bd.ok{color:var(--ok);border-color:#4cc38a55}.bd.wn{color:var(--wn);border-color:#e3b34155}.bd.er{color:var(--er);border-color:#e5534b55}.bd.ac{color:var(--ac);border-color:#3fd0d455}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}th{text-align:left;color:var(--mu);font-weight:500;padding:8px;border-bottom:1px solid var(--ln)}td{padding:8px;border-bottom:1px solid #ffffff08}tr:hover td{background:#ffffff05}
+.wrap{overflow-x:auto}
+.bar{height:6px;background:#ffffff10;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .2s}
+.steps{display:flex}.step{flex:1;text-align:center;font-size:12px;color:var(--mu);position:relative;padding-top:22px}
+.step:before{content:"";position:absolute;top:6px;left:0;right:0;height:2px;background:var(--ln)}.step:after{content:"";position:absolute;top:0;left:calc(50% - 7px);width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--ln)}
+.step.done{color:var(--tx)}.step.done:before{background:var(--ok)}.step.done:after{background:var(--ok);border-color:var(--ok)}.step.cur:after{border-color:var(--ac);background:var(--ac);animation:pl 1.2s infinite}
+@keyframes pl{50%{box-shadow:0 0 0 6px #3fd0d422}}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.chip{border:1px solid var(--ln);background:none;padding:4px 10px;border-radius:99px;font-size:12px;color:var(--mu)}.chip.on{color:var(--ac);border-color:var(--ac)}
+.empty{text-align:center;color:var(--mu);padding:36px;border:1px dashed var(--ln);border-radius:10px}
+.hash{font-family:ui-monospace,monospace;font-size:11px;color:var(--mu);word-break:break-all}
+.lane{position:relative;height:38px;border-bottom:1px solid #ffffff08}.lane label{position:absolute;left:0;top:10px;font-size:11px;color:var(--mu);width:60px}.lane .tr{position:absolute;left:64px;right:0;top:0;bottom:0}
+.ev{position:absolute;top:12px;width:12px;height:12px;border-radius:50%;transform:translateX(-6px);cursor:pointer;transition:.15s}.ev:hover{transform:translateX(-6px) scale(1.4)}
+.frame{position:relative;height:250px;border-radius:8px;border:1px solid var(--ln);background:linear-gradient(160deg,#1a222b,#0d1116);overflow:hidden}
+.box{position:absolute;border:1.5px solid var(--ac);font-size:10px;color:var(--ac);padding:0 3px;background:#3fd0d410}
+.tl{border-left:2px solid var(--ln);margin-left:6px}.tl>div{padding:0 0 18px 18px;position:relative}.tl>div:before{content:"";position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--ac)}
+#toasts{position:fixed;right:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:9}.toast{background:var(--pn);border:1px solid var(--ok);padding:10px 14px;border-radius:8px;animation:in .25s}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+#login{
+  min-height:100vh;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(420px,.82fr);
+  position:relative;overflow:hidden
+}
+#login:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 72% 45%,#35d6dc12,transparent 25%),
+             radial-gradient(circle at 18% 25%,#1c789016,transparent 30%),
+             linear-gradient(90deg,transparent 0 49.95%,#ffffff07 50%,transparent 50.05%)
+}
+#login>div{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;padding:72px}
+#login>div:first-child{background:linear-gradient(90deg,#07090c,#07090cdd 72%,transparent)}
+#login>div:last-child{background:linear-gradient(180deg,#080b0fcc,#05070ae8);border-left:1px solid #ffffff08}
+#login .l{max-width:650px;margin:0}
+.login-brand{display:flex;align-items:center;gap:12px;margin-bottom:34px}
+.login-brand .mark-wrap{width:44px;height:44px;border:1px solid #35d6dc55;border-radius:12px;display:grid;place-items:center;background:#35d6dc0b;box-shadow:0 0 35px #35d6dc12}
+.login-eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);font-weight:700;margin-bottom:14px}
+.login-title{font-size:clamp(38px,4.2vw,66px)!important;line-height:1.04!important;letter-spacing:-.045em!important;margin:0 0 20px!important;max-width:680px}
+.login-copy{font-size:16px!important;line-height:1.7;color:#aab5c2!important;max-width:620px;margin-bottom:26px!important}
+.login-tagline{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 30px}
+.login-tagline span{padding:7px 11px;border:1px solid #2a3944;border-radius:999px;color:#b9c4ce;background:#ffffff04;font-size:11px}
+.login-features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:650px}
+.login-feature{padding:14px;border:1px solid #1d2932;background:#ffffff03;border-radius:11px}
+.login-feature b{display:block;font-size:12px;margin-bottom:4px}.login-feature span{font-size:10px;color:var(--mu)}
+.login-panel{width:min(440px,100%);margin:auto!important;padding:30px!important;border-radius:18px!important;background:linear-gradient(145deg,#121820ee,#0b1016ee)!important;border:1px solid #293540!important;box-shadow:0 28px 70px #0009!important}
+.login-panel .panel-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.login-panel .panel-title{font-size:19px;font-weight:650;margin-bottom:4px}
+.login-panel .panel-sub{font-size:11px;color:var(--mu)}
+.login-status{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--ok);border:1px solid #49d29a33;padding:6px 8px;border-radius:999px;background:#49d29a0a}
+.login-panel label{font-size:12px;color:#cbd4dd}
+.login-panel input{margin-top:7px;height:44px;background:#070a0d;border-color:#27323d;border-radius:9px}
+.login-panel .btn{height:45px}
+.login-divider{height:1px;background:#ffffff0a;margin:20px 0}
+.login-note{font-size:10px;color:#65717f;line-height:1.6;text-align:center;margin-top:14px}
+.login-security{display:flex;justify-content:center;gap:16px;color:#677483;font-size:10px;margin-top:16px}
+@media(max-width:1000px){
+  #login{grid-template-columns:1fr}
+  #login>div{padding:42px 28px}
+  #login>div:first-child{min-height:auto}
+  #login>div:last-child{border-left:0;border-top:1px solid #ffffff08}
+  .login-title{font-size:42px!important}
+}
+@media(max-width:900px){
+  aside{width:64px}aside span,.me,.logo span{display:none}.g4,.g3{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}#page{padding:18px}
+}
+@media(max-width:620px){
+  .g4,.g3{grid-template-columns:1fr}
+  header{padding:10px 14px}
+  header input{display:none}
+  .login-features{grid-template-columns:1fr}
+  #login>div{padding:32px 20px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="root"></div><div id="toasts" aria-live="polite"></div>
+<script>
+/* ---------- types & mock data (would live in /data) ---------- */
+const CASE={id:"INV-2026-0042",name:"Warehouse Intrusion"};
+const CAMS=["CAM-01 Entrance","CAM-02 Parking","CAM-03 Loading Bay","CAM-04 Corridor","CAM-05 Storage"];
+const hex=(n,s)=>{let x=(s*2654435761)>>>0,o="";for(let i=0;i<n;i++){x=(x*1103515245+12345)>>>0;o+=((x>>>16)&15).toString(16)}return o};
+const EV=[[4821,3,"21 Sep 2026 · 22:14:37","412 MB","RECOVERED",98.2],[4822,4,"21 Sep 2026 · 22:14:41","388 MB","RECOVERED",96.4],[4830,5,"21 Sep 2026 · 22:15:02","201 MB","PARTIAL",71.9],[4833,1,"21 Sep 2026 · 22:09:10","640 MB","RECOVERED",99.1],[4841,2,"21 Sep 2026 · 22:12:55","95 MB","CORRUPTED",38.5],[4850,3,"21 Sep 2026 · 22:16:20","512 MB","RECOVERED",97.7],[4856,4,"21 Sep 2026 · 22:18:03","77 MB","UNRECOVERABLE",4.2],[4860,1,"21 Sep 2026 · 22:18:40","430 MB","PARTIAL",64.0]].map(([n,c,t,s,st,cf])=>({id:"VID-00"+n,cam:"CAM-0"+c,ts:t,size:s,st,conf:cf,n}));
+const TYPES={motion:["Motion","#8b95a3"],person:["Person","#3fd0d4"],face:["Face","#b48ead"],vehicle:["Vehicle","#e3b341"],door:["Door","#e5534b"],recording:["Recording","#4cc38a"],note:["Note","#ffffff"]};
+const TL=[[1,10,"motion","Motion detected"],[2,12,"person","Person detected"],[3,14.1,"vehicle","Vehicle detected"],[3,14.35,"person","Person detected"],[3,14.62,"recording","Recording begins"],[4,14.62,"person","Person detected"],[5,15.03,"door","Door movement"],[3,15.3,"vehicle","Vehicle detected"],[5,16,"door","Door event"],[4,17,"note","Investigator note: entry via loading bay"],[1,18,"person","Person exits"]].map(([c,m,t,l])=>({cam:c,min:m,type:t,label:l}));
+const CUST=[["18 Sep 2026 09:12","Evidence acquired","EVD-SRC-01"],["18 Sep 2026 09:18","Forensic image created","IMG-2026-00918"],["18 Sep 2026 09:25","SHA-256 generated","IMG-2026-00918"],["19 Sep 2026 11:42","Recovery analysis started","IMG-2026-00918"],["20 Sep 2026 15:30","Evidence reviewed","VID-004821"],["28 Sep 2026 14:32","AI analysis completed","VID-004821"]];
+const VENDORS=[["Dahua","Supported"],["CP Plus","Supported"],["Honeywell","Partial Support"],["TP-Link","Partial Support"],["Godrej","Analysis Required"],["Uniview","Supported"],["HIKVISION","Supported"],["Matrix","Analysis Required"]];
+const DEV=[["Dahua Technology","DH-XVR5216","DEV-001",16,"4 TB","Analyzed","28 Sep 2026"],["HIKVISION","DS-7608NI","DEV-002",8,"2 TB","Analyzed","24 Sep 2026"],["CP Plus","UVR-0801","DEV-003",8,"1 TB","Queued","—"],["Honeywell","HRGX16","DEV-004",16,"4 TB","Analyzed","22 Sep 2026"],["Uniview","NVR301-16","DEV-005",16,"3 TB","Analyzed","20 Sep 2026"],["Matrix","SATATYA-16","DEV-006",16,"2 TB","Pending","—"],["Godrej","SeeThru-8","DEV-007",8,"1 TB","Pending","—"],["TP-Link","VIGI NVR1016","DEV-008",16,"2 TB","Queued","—"]];
+
+/* ---------- mock services + vendor adapters (swap for real APIs) ---------- */
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+class VendorAdapter{constructor(n){this.name=n}identifyDevice(){}parseFilesystem(){}extractMetadata(){}decodeVideo(){}recoverDeleted(){}getCameraInfo(){}}
+class DahuaAdapter extends VendorAdapter{constructor(){super("Dahua")}identifyDevice(){return{vendor:"Dahua Technology",model:"DH-XVR5216",fw:"V4.003",ch:16,storage:"4 TB",fs:"Proprietary",codec:"H.265",tz:"UTC+05:30",conf:98.6}}}
+const adapters={dahua:new DahuaAdapter()};
+const Services={
+ async identify(cb){for(const s of ["Detecting storage structure...","Reading metadata...","Analyzing filesystem signature...","Matching vendor profile..."]){cb(s);await wait(750)}return adapters.dahua.identifyDevice()},
+ integrity:{md5:n=>hex(32,n),sha:n=>hex(64,n+7)}
+};
+
+/* ---------- state ---------- */
+const S={page:"overview",login:false,dev:null,acq:false,rec:false,ai:false,ver:false,corr:false,rep:false,prev:false,filt:new Set(Object.keys(TYPES)),notes:[["Recovery completed — 137 files recovered.","2 min ago"],["Integrity verification completed — 1,284/1,284 verified.","1 h ago"],["New critical timeline event detected.","3 h ago"],["Chain-of-custody record updated.","1 d ago"]]};
+const $=s=>document.querySelector(s);
+const toast=m=>{const d=document.createElement("div");d.className="toast";d.textContent="✓ "+m;$("#toasts").append(d);setTimeout(()=>d.remove(),3200);S.notes.unshift([m,"just now"])};
+const bd=(t,c="")=>`<span class="bd ${c}">${t}</span>`;
+const SEC=()=>`<div class="badges">${bd("READ ONLY","ac")}${bd("EVIDENCE PRESERVED","ok")}${bd("CHAIN OF CUSTODY ACTIVE","ok")}${bd("ANALYSIS MODE")}</div>`;
+async function prog(id,lbl,dur,fmt){const el=$("#"+id);for(let p=0;p<=100;p+=2){el.innerHTML=`<div class="bar"><i style="width:${p}%"></i></div><div class="mono" style="margin-top:8px;font-size:12px;color:var(--mu)">${lbl} ${p}%${fmt?" · "+fmt(p):""}</div>`;await wait(dur/50)}}
+const stc={RECOVERED:"ok",PARTIAL:"wn",CORRUPTED:"er",UNRECOVERABLE:"er"};
+const head=(t,s)=>`<h1>${t}</h1><div class="sub">${s||CASE.id+" · "+CASE.name}</div>${SEC()}`;
+
+/* ---------- pages ---------- */
+const P={
+overview(){const an=S.ai,rp=S.rep;const st=[["Acquisition","done"],["Parsing","done"],["Recovery","done"],["Analysis",an?"done":"cur"],["Validation","done"],["Reporting",rp?"done":""]];
+const k=[["Evidence Sources","08"],["Cameras","24"],["Recordings","1,284"],["Recovered Files","137"],["AI Detections","486"],["Integrity Verified","100%"],["Critical Events","12"],["Status","ACTIVE"]];
+return head("Investigation Overview")+`<div class="g g4">${k.map(([l,v])=>`<div class="card kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join("")}</div>
+<div class="card"><h3>Investigation Progress</h3><div class="steps">${st.map(([n,c])=>`<div class="step ${c}">${n}<br><small>${c=="done"?"Complete":c=="cur"?"In Progress":"Pending"}</small></div>`).join("")}</div></div>
+<div class="g g2"><div class="card"><h3>Investigation</h3><table>${[["Case ID",CASE.id],["Case Name",CASE.name],["Created","18 September 2026"],["Lead Investigator","Alex Morgan"],["Evidence Sources","8 DVR/NVR sources"],["Cameras","24"],["Last Activity","28 September 2026 · 14:32"]].map(([a,b])=>`<tr><td style="color:var(--mu)">${a}</td><td>${b}</td></tr>`).join("")}</table>
+<div style="margin-top:14px;display:flex;gap:8px"><button class="btn p" onclick="go('device')">Open Investigation</button><button class="btn" onclick="toast('Case exported — INV-2026-0042.zip')">Export Case</button></div></div>
+<div class="card"><h3>Camera Activity (events)</h3>${CAMS.map((c,i)=>{const v=[92,64,140,78,112][i];return`<div style="margin-bottom:10px;font-size:12px"><div style="display:flex;justify-content:space-between"><span>${c}</span><span class="mono">${v}</span></div><div class="bar"><i style="width:${v/1.4}%"></i></div></div>`}).join("")}</div></div>`},
+
+device(){const d=S.dev;return head("Device Identification","Automatically identify DVR/NVR vendor and model")+`<div class="card"><button class="btn p" onclick="scan()">SCAN EVIDENCE SOURCE</button><div id="sc" style="margin-top:14px">${d?"":'<div class="empty">Select an evidence source to begin forensic analysis.</div>'}</div>
+${d?res(d):""}</div><div class="card"><h3>Supported Vendors</h3><div class="g g4">${VENDORS.map(([v,s])=>`<div class="card kpi" style="margin:0"><b>${v}</b><div style="margin-top:6px">${bd(s.toUpperCase(),s=="Supported"?"ok":s.startsWith("Partial")?"wn":"")}</div></div>`).join("")}</div></div>`},
+
+acquisition(){return head("Forensic Acquisition")+`<div class="g g2"><div class="card"><h3>1 · Evidence Source</h3><div class="chips" id="src">${["Physical Drive","Forensic Image","DVR/NVR Export","Network Storage","Removable Media"].map((x,i)=>`<button class="chip ${i?"":"on"}" onclick="pick(this)">${x}</button>`).join("")}</div>
+<h3>2 · Configuration</h3><table>${[["Source ID","EVD-SRC-01"],["Vendor","Dahua Technology"],["Model","DH-XVR5216"],["Capacity","4 TB"],["Sector size","512 B"],["Filesystem","Proprietary"]].map(([a,b])=>`<tr><td style="color:var(--mu)">${a}</td><td class="mono">${b}</td></tr>`).join("")}</table></div>
+<div class="card"><h3>3 · Acquisition Mode</h3><div class="chips">${["Full Forensic Image","Selected Partitions","Selected Evidence"].map((x,i)=>`<button class="chip ${i?"":"on"}" onclick="pick(this)">${x}</button>`).join("")}</div>
+<h3>4 · Integrity</h3>${["Generate MD5","Generate SHA-256","Record acquisition timestamp","Create chain-of-custody entry","Write-protect source"].map(x=>`<label style="display:block;margin-bottom:6px"><input type="checkbox" checked style="width:auto"> ${x}</label>`).join("")}
+<button class="btn p" style="margin-top:12px" onclick="acquire()">START FORENSIC ACQUISITION</button></div></div><div id="ac" class="card" style="display:${S.acq?"block":"none"}">${S.acq?acqRes():""}</div>`},
+
+recovery(){const r=S.rec;const rec=r?137:0,cor=77;return head("Deleted Evidence Recovery")+`<div class="g g4"><div class="card kpi"><div class="l">Deleted Entries</div><div class="v">382</div></div><div class="card kpi"><div class="l">Recoverable</div><div class="v">214</div></div><div class="card kpi"><div class="l">Recovered</div><div class="v" style="color:var(--ok)">${rec}</div></div><div class="card kpi"><div class="l">Corrupted</div><div class="v" style="color:var(--er)">${cor}</div></div></div>
+<div class="card"><button class="btn p" onclick="recover()">START RECOVERY SCAN</button> ${r?bd("137 EVIDENCE OBJECTS RECOVERED","ok"):""}<div id="rp" style="margin:12px 0"></div>
+<div class="wrap"><table><tr><th></th><th>File</th><th>Camera</th><th>Timestamp</th><th>Size</th><th>Status</th><th>Confidence</th></tr>${EV.map(e=>{const st=r||e.st!="RECOVERED"?e.st:"UNRECOVERABLE";const shown=r?e.st:"—";return`<tr><td><input type="checkbox" style="width:auto"></td><td class="mono">${e.id}.h265</td><td>${e.cam}</td><td>${e.ts}</td><td>${e.size}</td><td>${r?bd(e.st,stc[e.st]):bd("PENDING SCAN")}</td><td class="mono">${r?e.conf+"%":"—"}</td></tr>`}).join("")}</table></div>
+<div style="margin-top:12px;display:flex;gap:8px">${["Preview","Recover","Export","Add to Case"].map(b=>`<button class="btn" onclick="toast('${b} — selected objects')">${b}</button>`).join("")}</div></div>`},
+
+timeline(){const list=TL.filter(e=>S.filt.has(e.type));const tm=m=>"22:"+String(Math.floor(m)).padStart(2,"0");
+return head("Investigation Timeline","Normalized to UTC+05:30 · 21 Sep 2026")+`<div class="card"><div class="chips">${Object.entries(TYPES).map(([k,[n,c]])=>`<button class="chip ${S.filt.has(k)?"on":""}" onclick="ft('${k}')"><span style="color:${c}">●</span> ${n}</button>`).join("")}<button class="btn p" style="margin-left:auto" onclick="correlate()">Correlate Events</button></div>
+<div>${[1,2,3,4,5].map(c=>`<div class="lane"><label class="mono">CAM-0${c}</label><div class="tr">${list.filter(e=>e.cam==c).map(e=>`<span class="ev" title="${tm(e.min)}:${String(Math.round(e.min%1*60)).padStart(2,"0")} — ${e.label}" style="left:${(e.min-8)/12*100}%;background:${TYPES[e.type][1]}"></span>`).join("")}</div></div>`).join("")}
+<div class="mono" style="display:flex;justify-content:space-between;margin:6px 0 0 64px;font-size:11px;color:var(--mu)">${[8,10,12,14,16,18,20].map(m=>`<span>22:${String(m).padStart(2,"0")}</span>`).join("")}</div></div></div>
+${S.corr?`<div class="card" style="border-color:var(--ac)"><h3>Incident Cluster #04</h3><div class="tl">${[["22:14:21","CAM-03","Person detected"],["22:14:37","CAM-04","Person detected"],["22:15:02","CAM-05","Door movement"],["22:15:18","CAM-03","Vehicle detected"]].map(r=>`<div><span class="mono">${r[0]}</span> — <b>${r[1]}</b> — ${r[2]}</div>`).join("")}</div></div>`:""}
+<div class="card"><h3>Event Log (${list.length})</h3><table>${list.map(e=>`<tr><td class="mono">${tm(e.min)}:${String(Math.round(e.min%1*60)).padStart(2,"0")}</td><td>CAM-0${e.cam}</td><td><span style="color:${TYPES[e.type][1]}">●</span> ${TYPES[e.type][0]}</td><td>${e.label}</td></tr>`).join("")}</table></div>`},
+
+ai(){const a=S.ai;const n=(v)=>a?v:"—";return head("AI Video Intelligence")+`<div class="card"><button class="btn p" onclick="runAI()">RUN AI ANALYSIS</button><div id="ap" style="margin-top:12px"></div></div>${a?"":'<div class="empty">Run AI analysis to populate detections.</div>'}
+<div class="g g3"><div class="card"><h3>Face Detection</h3><div class="v" style="font-size:26px">${n(42)}</div><div class="hash">Known ${n(11)} · Unknown ${n(31)}</div></div><div class="card"><h3>Object Detection</h3><div class="v" style="font-size:26px">${a?"308":"—"}</div><div class="hash">Persons ${n(184)} · Vehicles ${n(73)} · Bags ${n(19)} · Other ${n(32)}</div></div><div class="card"><h3>Motion Analysis</h3><div class="v" style="font-size:26px">${n(216)}</div><div class="hash">motion events</div></div></div>
+${a?`<div class="g g2"><div class="card"><h3>CAM-03 · 21 Sep 2026 · 22:14:37</h3><div class="frame"><div class="box" style="left:22%;top:30%;width:14%;height:52%">Person 96.8%</div><div class="box" style="left:27%;top:32%;width:5%;height:10%;border-color:#b48ead;color:#b48ead">Face 91.2%</div><div class="box" style="left:56%;top:52%;width:30%;height:32%;border-color:#e3b341;color:#e3b341">Vehicle 94.1%</div><div class="box" style="left:40%;top:60%;width:8%;height:14%;border-color:#8b95a3;color:#8b95a3">Bag 82.5%</div></div></div>
+<div class="card"><h3>Detection Distribution</h3>${[["Person",184],["Vehicle",73],["Other",32],["Bag",19]].map(([l,v])=>`<div style="margin-bottom:10px;font-size:12px"><div style="display:flex;justify-content:space-between"><span>${l}</span><span class="mono">${v}</span></div><div class="bar"><i style="width:${v/1.84}%"></i></div></div>`).join("")}<h3 style="margin-top:16px">Results</h3><table><tr><td>Person</td><td>CAM-03</td><td class="mono">22:14:37</td><td class="mono">96.8%</td></tr><tr><td>Vehicle</td><td>CAM-03</td><td class="mono">22:15:18</td><td class="mono">94.1%</td></tr><tr><td>Face</td><td>CAM-04</td><td class="mono">22:14:37</td><td class="mono">91.2%</td></tr></table></div></div>`:""}`},
+
+integrity(){const v=S.ver;return head("Evidence Integrity")+`<div class="card" style="text-align:center"><div class="donut" style="margin:0 auto 10px;background:conic-gradient(${v?"var(--ok)":"var(--wn)"} ${v?360:340}deg,#ffffff10 0)"><b>${v?"100%":"—"}</b></div><div style="font-weight:600;letter-spacing:.1em;color:${v?"var(--ok)":"var(--mu)"}">${v?"EVIDENCE INTEGRITY VERIFIED":"VERIFICATION PENDING"}</div><div class="sub" style="margin:4px 0 0">Total 1,284 · Verified ${v?"1,284":"—"} · Modified 0 · Hash mismatch 0</div>
+<div style="margin-top:14px"><button class="btn p" onclick="verify()">Verify All</button> <button class="btn" onclick="toast('Integrity certificate generated — CERT-2026-0042')">Generate Integrity Certificate</button></div><div id="vp" style="margin-top:14px"></div></div>
+<div class="card wrap"><table><tr><th>Evidence ID</th><th>MD5</th><th>SHA-256</th><th>Generated</th><th>Status</th></tr>${EV.slice(0,6).map(e=>`<tr><td class="mono">${e.id}</td><td class="hash">${Services.integrity.md5(e.n)}</td><td class="hash">${Services.integrity.sha(e.n).slice(0,32)}…</td><td>18 Sep 2026</td><td>${v?bd("HASH VERIFIED","ok"):bd("PENDING")}</td></tr>`).join("")}</table></div>`},
+
+custody(){return head("Chain of Custody")+`<div class="card"><div class="tl">${CUST.map(([t,a,e],i)=>`<div><div class="mono" style="font-size:12px;color:var(--mu)">${t}</div><b>${a}</b><div style="font-size:12px;color:var(--mu)">By Alex Morgan · ${e} · ${bd("LOGGED","ok")}</div><div class="hash">SHA-256 ${hex(24,i+40)}…</div></div>`).join("")}</div><button class="btn p" onclick="toast('Chain-of-custody record exported')">Export Chain-of-Custody Record</button></div>`},
+
+reports(){const secs=["Case Information","Device Information","Acquisition Details","Filesystem Analysis","Recovery Results","Timeline","AI Analysis","Hash Verification","Chain of Custody","Investigator Notes"];
+return head("Forensic Report")+`<div class="card"><h3>Report Configuration</h3><div class="g g2">${secs.map(s=>`<label><input type="checkbox" checked style="width:auto"> ${s}</label>`).join("")}</div><button class="btn p" style="margin-top:14px" onclick="report()">GENERATE FORENSIC REPORT</button><div id="rg" style="margin-top:12px"></div></div>
+${S.rep?`<div class="card" style="border-color:var(--ok)"><b style="color:var(--ok)">REPORT GENERATED</b> · <span class="mono">RPT-2026-0042</span> ${bd("PDF")}${bd("JSON")}${bd("CSV")}<div style="margin-top:12px;display:flex;gap:8px"><button class="btn p" onclick="S.prev=!S.prev;render()">Preview Report</button><button class="btn" onclick="toast('RPT-2026-0042.pdf exported')">Export PDF</button><button class="btn" onclick="toast('Evidence index exported')">Export Evidence Index</button></div></div>`:""}
+${S.prev?`<div class="card" style="background:#f4f5f7;color:#15181c;max-width:820px"><div style="display:flex;justify-content:space-between;border-bottom:2px solid #15181c;padding-bottom:8px"><b style="letter-spacing:.14em">FORGE-X</b><b style="color:#b3261e">CONFIDENTIAL</b></div><h2 style="margin:14px 0 2px">DIGITAL FORENSIC ANALYSIS REPORT</h2><div>Case ${CASE.id} · ${CASE.name}</div>
+${[["Executive Summary","8 evidence sources, 24 cameras and 1,284 recordings were processed; 137 deleted recordings were recovered and 486 AI detections generated."],["Device Identification","Dahua Technology DH-XVR5216, firmware V4.003, 16 channels, 4 TB, H.265 (98.6% profile match)."],["Acquisition Method","Full forensic image IMG-2026-00918 with write-protected source."],["Recovered Evidence","137 recovered, 77 corrupted, 214 recoverable of 382 deleted entries."],["Timeline Analysis","Incident cluster #04 correlates CAM-03, CAM-04 and CAM-05 between 22:14:21 and 22:15:18."],["Integrity Verification","Integrity verification completed according to the configured forensic workflow: 1,284/1,284 objects matched recorded MD5 and SHA-256 values."],["Chain of Custody","6 recorded events, 18–28 Sep 2026."]].map(([h,t])=>`<h4 style="margin:14px 0 4px">${h}</h4><div style="font-size:13px">${t}</div>`).join("")}
+<div style="margin-top:20px;font-size:12px">Image SHA-256: <span class="mono">${hex(64,918)}</span></div><div style="margin-top:22px;border-top:1px solid #15181c;width:220px;padding-top:4px;font-size:12px">Alex Morgan — Digital Forensics Analyst</div></div>`:""}`},
+
+devices(){return head("Devices")+`<div class="card wrap"><table><tr><th>Vendor</th><th>Model</th><th>Device ID</th><th>Channels</th><th>Storage</th><th>Status</th><th>Last Analysis</th></tr>${DEV.map(d=>`<tr><td>${d[0]}</td><td class="mono">${d[1]}</td><td class="mono">${d[2]}</td><td>${d[3]}</td><td>${d[4]}</td><td>${bd(d[5].toUpperCase(),d[5]=="Analyzed"?"ok":"")}</td><td>${d[6]}</td></tr>`).join("")}</table><button class="btn p" style="margin-top:12px" onclick="toast('Evidence source added — DEV-009')">Add Evidence Source</button></div>`}
+};
+const res=d=>`<div class="g g2" style="margin-top:14px"><table>${[["Vendor",d.vendor],["Model",d.model],["Firmware",d.fw],["Channels",d.ch],["Storage",d.storage],["Filesystem",d.fs],["Video Codec",d.codec],["Timezone",d.tz]].map(([a,b])=>`<tr><td style="color:var(--mu)">${a}</td><td class="mono">${b}</td></tr>`).join("")}</table><div style="text-align:center"><div class="v" style="font-size:34px;color:var(--ok)">${d.conf}%</div>${bd("MATCH","ok")}</div></div>`;
+const acqRes=()=>`<b style="color:var(--ok)">ACQUISITION COMPLETE</b> ${bd("VERIFIED","ok")}<table style="margin-top:10px">${[["Image ID","IMG-2026-00918"],["MD5",hex(32,918)],["SHA-256",hex(64,925)],["Duration","06h 04m 12s"],["Sectors acquired","7,814,037,168"]].map(([a,b])=>`<tr><td style="color:var(--mu)">${a}</td><td class="mono" style="word-break:break-all">${b}</td></tr>`).join("")}</table>`;
+
+/* ---------- actions ---------- */
+async function scan(){const el=$("#sc");const d=await Services.identify(s=>el.innerHTML=`<div class="bar"><i style="width:60%;animation:pl 1s infinite"></i></div><div class="mono" style="margin-top:8px;color:var(--ac)">${s}</div>`);S.dev=d;render();toast("Device identified — Dahua DH-XVR5216")}
+function pick(b){b.parentNode.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));b.classList.add("on")}
+async function acquire(){const a=$("#ac");a.style.display="block";a.innerHTML='<div id="ap2"></div>';await prog("ap2","Acquiring sectors...",3500,p=>`${(p*.04).toFixed(2)} TB / 4 TB · 186 MB/s · ETA ${Math.round((100-p)*.19)}m`);S.acq=true;a.innerHTML=acqRes();toast("Acquisition complete — IMG-2026-00918")}
+async function recover(){await prog("rp","Scanning deleted entries...",3000);S.rec=true;render();toast("Recovery completed — 137 files recovered.")}
+function ft(k){S.filt.has(k)?S.filt.delete(k):S.filt.add(k);render()}
+function correlate(){S.corr=true;render();toast("Correlated incident cluster #04")}
+async function runAI(){await prog("ap","Detecting faces, objects, motion...",3000);S.ai=true;render();toast("AI analysis complete — 486 detections")}
+async function verify(){await prog("vp","Verifying hashes...",3000,p=>`${Math.round(p*12.84)}/1,284`);S.ver=true;render();toast("All evidence objects successfully verified.")}
+async function report(){await prog("rg","Compiling report...",2200);S.rep=true;S.prev=false;render();toast("Report generation completed — RPT-2026-0042")}
+function search(q){q=q.trim().toLowerCase();if(!q)return;const parts=q.split(/\s+/);const hit=EV.filter(e=>parts.every(p=>(e.id+e.cam+e.ts+e.st).toLowerCase().includes(p)));S.q=q;S.hits=hit;render()}
+
+/* ---------- shell ---------- */
+const NAV=[["overview","Overview","◧"],["device","Device ID","◎"],["acquisition","Acquisition","⬇"],["recovery","Recovery","↺"],["timeline","Timeline","≡"],["ai","AI Analysis","◈"],["integrity","Integrity","#"],["custody","Chain of Custody","⛓"],["reports","Reports","▤"],["devices","Devices","▦"]];
+const mark=`<svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="#3fd0d4" stroke-width="2"><path d="M4 4h12v6H10v4h8M4 4v18M14 22l8-8M22 22l-8-8" stroke-linecap="square"/></svg>`;
+function go(p){S.page=p;S.hits=null;render()}
+function render(){
+ if(!S.login){$("#root").innerHTML=`<div id="login">
+  <div><div class="l">
+    <div class="login-brand">
+      <div class="mark-wrap">${mark}</div>
+      <div><div style="font-size:19px;font-weight:750;letter-spacing:.16em">FORGE-X</div><div style="font-size:9px;color:#71808d;letter-spacing:.18em;margin-top:2px">FORENSIC INTELLIGENCE PLATFORM</div></div>
+    </div>
+    <div class="login-eyebrow">Digital Evidence Operations</div>
+    <h1 class="login-title">Multi-Vendor DVR/NVR<br>Forensic Intelligence</h1>
+    <p class="login-copy">Standardize surveillance evidence acquisition, recovery, validation and analysis across heterogeneous DVR/NVR platforms — with a clear, auditable forensic workflow.</p>
+    <div class="login-tagline"><span>Acquire</span><span>Recover</span><span>Validate</span><span>Analyze</span><span>Prove</span></div>
+    <div class="login-features">
+      <div class="login-feature"><b>01 · ACQUIRE</b><span>Forensic imaging &amp; write protection</span></div>
+      <div class="login-feature"><b>02 · RECOVER</b><span>Deleted &amp; damaged recording recovery</span></div>
+      <div class="login-feature"><b>03 · PROVE</b><span>Integrity, timeline &amp; chain of custody</span></div>
+    </div>
+  </div></div>
+  <div><form class="card login-panel" onsubmit="event.preventDefault();S.login=true;render()">
+    <div class="panel-head">
+      <div><div class="panel-title">Investigator Sign In</div><div class="panel-sub">Secure access to investigation workspace</div></div>
+      <div class="login-status"><i class="dot"></i> SYSTEM ONLINE</div>
+    </div>
+    <label>Investigator ID<input value="INV-AM-0117" aria-label="Investigator ID" autocomplete="username"></label>
+    <div style="height:16px"></div>
+    <label>Password<input type="password" value="demo-password" aria-label="Password" autocomplete="current-password"></label>
+    <button class="btn p" style="width:100%;margin-top:20px">Sign In to Investigation <span style="float:right">→</span></button>
+    <div class="login-divider"></div>
+    <button type="button" class="btn" style="width:100%;background:#ffffff05" onclick="S.login=true;render();toast('Demo investigation loaded — INV-2026-0042')">Launch Demo Investigation</button>
+    <div class="login-note">Demo environment · Evidence sources are simulated for interface demonstration.</div>
+    <div class="login-security"><span>● Read-only evidence</span><span>● Audit trail</span><span>● SHA-256</span></div>
+  </form></div>
+</div>`;return}
+ const cur=NAV.find(n=>n[0]==S.page);
+ const pg=S.hits?head("Search results",`“${S.q}” · ${S.hits.length} match(es)`)+`<div class="card">${S.hits.length?`<table>${S.hits.map(e=>`<tr><td class="mono">${e.id}</td><td>${e.cam}</td><td>${e.ts}</td><td>${bd(e.st,stc[e.st])}</td><td class="hash">${Services.integrity.sha(e.n).slice(0,24)}…</td></tr>`).join("")}</table>`:'<div class="empty">No matching evidence.</div>'}</div>`:P[S.page]();
+ $("#root").innerHTML=`<div id="app"><aside><div class="logo">${mark}<span>FORGE-X</span></div><nav aria-label="Primary">${NAV.map(([k,l,i])=>`<button class="${k==S.page?"on":""}" onclick="go('${k}')" title="${l}"><b>${i}</b><span>${l}</span></button>`).join("")}</nav><div class="me"><b><i class="dot"></i>Alex Morgan</b>Digital Forensics Analyst</div></aside>
+ <main><header><div class="crumb"><b style="color:var(--tx)">${CASE.id} / ${CASE.name}</b> · Investigations / ${cur?cur[1]:"Search"}</div>${bd("ACTIVE INVESTIGATION","ok")}<input id="q" placeholder="Search evidence · CAM-03 · 22:14" aria-label="Global search" value="${S.q&&S.hits?S.q:""}" onkeydown="if(event.key=='Enter')search(this.value)"><button class="btn" title="Notifications" onclick="const n=$('#nt');n.hidden=!n.hidden">🔔 ${S.notes.length}</button><button class="btn" title="Help" onclick="toast('Demo path: Device ID → Acquisition → Recovery → Timeline → AI → Integrity → Report')">?</button></header>
+ <div id="nt" hidden class="card" style="position:absolute;right:24px;top:56px;z-index:8;width:340px;margin:0">${S.notes.slice(0,6).map(n=>`<div style="padding:6px 0;border-bottom:1px solid var(--ln)">${n[0]}<div class="hash">${n[1]}</div></div>`).join("")}</div>
+ <div id="page">${pg}</div></main></div>`}
+render();
+</script></body></html>
